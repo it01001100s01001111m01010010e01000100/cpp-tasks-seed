@@ -16,7 +16,7 @@ static vector<uint8_t> str_to_vec(string const &s)
 
 // переводим вектор байтов обратно в строку
 // это удобно, когда надо руками посмотреть результат в отладке
-static string vec_to_str(vector<uint8_t> const &v)
+[[maybe_unused]] static string vec_to_str(vector<uint8_t> const &v)
 {
     return string(v.begin(), v.end());
 }
