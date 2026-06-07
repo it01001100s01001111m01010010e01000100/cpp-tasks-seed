@@ -1,0 +1,28 @@
+name: "Make & Test"
+
+on: [pull_request, push]
+
+env:
+  CMAKE_BUILD_TYPE: RelWithDebInfo
+
+jobs:
+  maketest:
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        task:
+          - 00.DummyMake
+          - 01.InplaceSorting
+          - 02.Base85
+          - 03.Gauss
+    steps:
+      - name: Получение кода и actions
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - name: Инсталляция инструментов
+        uses: ./.github/actions/install-prerequisites
+      - uses: ./.github/actions/make-utest
+        with:
+          exercise: ${{ matrix.task }}
