@@ -2,6 +2,8 @@ CXX_EXTRA_FLAGS=-I../external/lazycsv/include -I../external/eigen
 
 include ../Makefile.inc
 
+CXXFLAGS += $(CXX_EXTRA_FLAGS)
+
 release : gauss
 
 gauss : util.r.o Gauss_main.r.o Gauss_solve.r.o
@@ -18,11 +20,11 @@ run_utest : utest
 
 run_itest : release
 	echo "Integration tests..."
-	./integration_test.sh
+	bash ./integration_test.sh
 
 tidy:
 	../tidy.sh
 
 all: depends run_utest run_itest
 
-include Makefile.hdrdep
+-include Makefile.hdrdep
