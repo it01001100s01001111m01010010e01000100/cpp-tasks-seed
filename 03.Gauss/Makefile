@@ -23,7 +23,10 @@ run_itest : release
 	bash ./integration_test.sh
 
 tidy:
-	../tidy.sh
+	for f in *.cpp; do \
+		echo "Running clang-tidy on $$f"; \
+		clang-tidy -checks='-*,clang-analyzer-*,performance-*,bugprone-*' "$$f" --quiet -- $(CXX_EXTRA_FLAGS) -std=c++17; \
+	done
 
 all: depends run_utest run_itest
 
