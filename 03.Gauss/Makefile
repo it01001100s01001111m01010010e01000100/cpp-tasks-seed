@@ -1,4 +1,4 @@
-CXX_EXTRA_FLAGS=-I../external/lazycsv/include -I../external/eigen
+CXX_EXTRA_FLAGS=-I/usr/include/eigen3
 
 include ../Makefile.inc
 

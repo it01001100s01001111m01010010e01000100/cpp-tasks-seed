@@ -2,8 +2,9 @@
 
 #include <cctype>
 #include <cstddef>
+#include <fstream>
 #include <iomanip>
-#include <lazycsv.hpp>
+#include <sstream>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -29,23 +30,50 @@ bool parse_double(const std::string& text, double& value)
         return false;
     }
 }
+
+std::vector<std::string> split_csv_line(const std::string& line)
+{
+    std::vector<std::string> cells;
+    std::string cell;
+    std::stringstream input(line);
+
+    while (std::getline(input, cell, ','))
+    {
+        cells.push_back(cell);
+    }
+
+    if (!line.empty() && line.back() == ',')
+    {
+        cells.emplace_back();
+    }
+
+    return cells;
+}
 } // namespace
 
 GaussMatrix load_csv_to_matrix(const char *filename)
 {
-    std::vector<std::vector<double>> rows;
-    lazycsv::parser parser{filename};
+    std::ifstream input(filename);
 
-    for (const auto row : parser)
+    if (!input)
     {
+        throw std::runtime_error("Cannot open CSV file");
+    }
+
+    std::vector<std::vector<double>> rows;
+    std::string line;
+
+    while (std::getline(input, line))
+    {
+        const std::vector<std::string> cells = split_csv_line(line);
         std::vector<double> values;
         bool numeric_row = true;
 
-        for (const auto cell : row)
+        for (const auto& cell : cells)
         {
             double value = 0.0;
 
-            if (!parse_double(std::string(cell.raw()), value))
+            if (!parse_double(cell, value))
             {
                 numeric_row = false;
                 break;
